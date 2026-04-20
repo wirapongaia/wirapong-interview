@@ -1,0 +1,2300 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<title>Wirapong | แบบสัมภาษณ์ลูกค้า AIA</title>
+<link href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --primary: #C8102E;
+    --primary-dark: #8B0000;
+    --gold: #D4A574;
+    --gold-light: #F5E6D3;
+    --bg: #F8F6F2;
+    --card: #FFFFFF;
+    --text: #1A1A1A;
+    --text-dim: #6B6B6B;
+    --border: #E5E0D8;
+    --success: #2D8B3A;
+    --success-bg: #E8F5EA;
+    --danger: #D4342A;
+    --danger-bg: #FEECEB;
+    --warn: #E8A52C;
+    --warn-bg: #FFF8E7;
+    --shadow: 0 1px 3px rgba(0,0,0,0.06), 0 4px 12px rgba(0,0,0,0.04);
+    --shadow-lg: 0 8px 24px rgba(0,0,0,0.08);
+  }
+  
+  * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+  
+  body {
+    font-family: 'Prompt', -apple-system, BlinkMacSystemFont, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.5;
+    font-size: 15px;
+    min-height: 100vh;
+    -webkit-font-smoothing: antialiased;
+  }
+  
+  /* Status Bar */
+  .status-bar {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    background: var(--card);
+    border-bottom: 1px solid var(--border);
+    padding: 10px 16px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    box-shadow: var(--shadow);
+  }
+  
+  .status-bar .brand {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  
+  .status-bar .logo {
+    width: 32px; height: 32px;
+    background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-weight: 700;
+    font-size: 14px;
+  }
+  
+  .status-bar .title-box {
+    line-height: 1.1;
+  }
+  
+  .status-bar .title-box .t1 {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--text);
+  }
+  
+  .status-bar .title-box .t2 {
+    font-size: 11px;
+    color: var(--text-dim);
+  }
+  
+  .status-indicator {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 11px;
+    font-weight: 500;
+    padding: 5px 10px;
+    border-radius: 100px;
+    background: var(--success-bg);
+    color: var(--success);
+  }
+  
+  .status-indicator.offline {
+    background: var(--warn-bg);
+    color: var(--warn);
+  }
+  
+  .status-indicator .dot {
+    width: 6px; height: 6px;
+    background: currentColor;
+    border-radius: 50%;
+    animation: pulse 2s infinite;
+  }
+  
+  @keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.4; }
+  }
+  
+  /* Tab Switcher */
+  .tab-switcher {
+    display: flex;
+    background: var(--card);
+    border-bottom: 1px solid var(--border);
+    padding: 0 8px;
+    overflow-x: auto;
+    position: sticky;
+    top: 54px;
+    z-index: 90;
+  }
+  
+  .tab {
+    flex: 1;
+    min-width: 0;
+    padding: 14px 10px;
+    border: none;
+    background: transparent;
+    color: var(--text-dim);
+    font-family: inherit;
+    font-size: 13px;
+    font-weight: 500;
+    cursor: pointer;
+    border-bottom: 3px solid transparent;
+    transition: all 0.2s;
+    white-space: nowrap;
+  }
+  
+  .tab.active {
+    color: var(--primary);
+    border-bottom-color: var(--primary);
+    font-weight: 600;
+  }
+  
+  .tab-badge {
+    display: inline-block;
+    background: var(--gold-light);
+    color: var(--primary-dark);
+    padding: 1px 7px;
+    border-radius: 20px;
+    font-size: 10px;
+    font-weight: 600;
+    margin-left: 4px;
+  }
+  
+  /* Container */
+  .container {
+    max-width: 760px;
+    margin: 0 auto;
+    padding: 16px;
+  }
+  
+  /* Form Container */
+  .form-view {
+    display: none;
+  }
+  .form-view.active { display: block; }
+  
+  /* Form Header */
+  .form-header {
+    background: var(--card);
+    border-radius: 14px;
+    padding: 20px;
+    margin-bottom: 14px;
+    box-shadow: var(--shadow);
+    border-top: 4px solid var(--primary);
+  }
+  
+  .form-header h1 {
+    font-size: 18px;
+    font-weight: 700;
+    margin-bottom: 4px;
+    color: var(--text);
+  }
+  
+  .form-header .desc {
+    font-size: 13px;
+    color: var(--text-dim);
+  }
+  
+  .form-header .date-line {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-top: 12px;
+    padding-top: 12px;
+    border-top: 1px dashed var(--border);
+  }
+  
+  .form-header .date-line .label {
+    font-size: 12px;
+    color: var(--text-dim);
+  }
+  
+  .form-header .date-line .date {
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--gold);
+  }
+  
+  /* Question Card */
+  .q-card {
+    background: var(--card);
+    border-radius: 12px;
+    padding: 16px;
+    margin-bottom: 10px;
+    box-shadow: var(--shadow);
+    border-left: 3px solid transparent;
+    transition: border-color 0.2s;
+  }
+  
+  .q-card.answered {
+    border-left-color: var(--success);
+  }
+  
+  .q-label {
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+    margin-bottom: 12px;
+  }
+  
+  .q-num {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 24px; height: 24px;
+    background: var(--gold-light);
+    color: var(--primary-dark);
+    border-radius: 6px;
+    font-size: 12px;
+    font-weight: 700;
+    flex-shrink: 0;
+    margin-top: 1px;
+  }
+  
+  .q-text {
+    flex: 1;
+    font-size: 14.5px;
+    font-weight: 500;
+    line-height: 1.5;
+    color: var(--text);
+  }
+  
+  /* Options */
+  .options {
+    display: grid;
+    gap: 8px;
+  }
+  
+  .options.row-2 { grid-template-columns: 1fr 1fr; }
+  .options.row-3 { grid-template-columns: repeat(3, 1fr); }
+  
+  @media (max-width: 400px) {
+    .options.row-3 { grid-template-columns: 1fr 1fr; }
+  }
+  
+  .opt {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 11px 14px;
+    background: var(--bg);
+    border: 1.5px solid var(--border);
+    border-radius: 10px;
+    cursor: pointer;
+    font-size: 13.5px;
+    transition: all 0.15s;
+    user-select: none;
+    min-height: 42px;
+  }
+  
+  .opt:active { transform: scale(0.98); }
+  
+  .opt input { position: absolute; opacity: 0; pointer-events: none; }
+  
+  .opt .check {
+    width: 18px; height: 18px;
+    border: 2px solid var(--text-dim);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    transition: all 0.15s;
+  }
+  
+  .opt.checkbox .check { border-radius: 4px; }
+  
+  .opt input:checked ~ .check {
+    border-color: var(--primary);
+    background: var(--primary);
+  }
+  
+  .opt input:checked ~ .check::after {
+    content: '';
+    width: 8px; height: 8px;
+    background: white;
+    border-radius: 50%;
+  }
+  
+  .opt.checkbox input:checked ~ .check::after {
+    content: '✓';
+    background: transparent;
+    color: white;
+    font-size: 11px;
+    font-weight: 700;
+    width: auto; height: auto;
+  }
+  
+  .opt:has(input:checked) {
+    background: var(--gold-light);
+    border-color: var(--gold);
+    color: var(--primary-dark);
+    font-weight: 500;
+  }
+  
+  .opt-text { flex: 1; line-height: 1.3; }
+  
+  /* Text Input */
+  .text-input, .text-area {
+    width: 100%;
+    padding: 11px 14px;
+    border: 1.5px solid var(--border);
+    border-radius: 10px;
+    font-family: inherit;
+    font-size: 14px;
+    background: var(--bg);
+    color: var(--text);
+    transition: all 0.15s;
+  }
+  
+  .text-input:focus, .text-area:focus {
+    outline: none;
+    border-color: var(--gold);
+    background: var(--card);
+  }
+  
+  .text-area {
+    resize: vertical;
+    min-height: 60px;
+  }
+  
+  /* Inline input with options */
+  .inline-group {
+    margin-top: 8px;
+    display: flex;
+    gap: 8px;
+    align-items: center;
+  }
+  
+  .inline-group .text-input { flex: 1; }
+  
+  /* Quote / Highlight Box */
+  .highlight-box {
+    padding: 14px 16px;
+    background: linear-gradient(135deg, var(--gold-light), #FAF3E8);
+    border-left: 3px solid var(--gold);
+    border-radius: 10px;
+    margin-bottom: 12px;
+    font-size: 13.5px;
+    font-style: italic;
+    color: var(--primary-dark);
+    line-height: 1.55;
+    font-weight: 500;
+  }
+  
+  /* Customer Info Section */
+  .customer-info {
+    background: var(--card);
+    border-radius: 12px;
+    padding: 18px;
+    margin-top: 14px;
+    box-shadow: var(--shadow);
+    border-top: 3px solid var(--gold);
+  }
+  
+  .section-title {
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--text);
+    margin-bottom: 14px;
+    padding-bottom: 10px;
+    border-bottom: 1px dashed var(--border);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  
+  .field-grid {
+    display: grid;
+    gap: 12px;
+  }
+  
+  .field-grid.cols-2 { grid-template-columns: 1fr 1fr; }
+  
+  @media (max-width: 480px) {
+    .field-grid.cols-2 { grid-template-columns: 1fr; }
+  }
+  
+  .field {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+  }
+  
+  .field label {
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--text-dim);
+  }
+  
+  .family-status {
+    display: flex;
+    gap: 6px;
+    flex-wrap: wrap;
+  }
+  
+  .family-status .opt-small {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 7px 12px;
+    background: var(--bg);
+    border: 1.5px solid var(--border);
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 13px;
+    user-select: none;
+  }
+  
+  .family-status .opt-small input { display: none; }
+  
+  .family-status .opt-small:has(input:checked) {
+    background: var(--gold-light);
+    border-color: var(--gold);
+    color: var(--primary-dark);
+    font-weight: 500;
+  }
+  
+  .children-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+    margin-top: 8px;
+  }
+  
+  .children-grid .text-input {
+    text-align: center;
+  }
+  
+  /* Action Buttons */
+  .action-bar {
+    position: sticky;
+    bottom: 0;
+    background: var(--card);
+    border-top: 1px solid var(--border);
+    padding: 12px 16px;
+    display: flex;
+    gap: 10px;
+    box-shadow: 0 -4px 12px rgba(0,0,0,0.05);
+    z-index: 50;
+    margin: 20px -16px -16px -16px;
+  }
+  
+  .btn {
+    flex: 1;
+    padding: 13px 16px;
+    border: none;
+    border-radius: 10px;
+    font-family: inherit;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.15s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+  }
+  
+  .btn:active { transform: scale(0.97); }
+  
+  .btn-primary {
+    background: var(--primary);
+    color: white;
+  }
+  
+  .btn-primary:hover { background: var(--primary-dark); }
+  
+  .btn-secondary {
+    background: var(--bg);
+    color: var(--text);
+    border: 1.5px solid var(--border);
+  }
+  
+  .btn-ghost {
+    background: transparent;
+    color: var(--text-dim);
+    flex: 0 0 auto;
+    padding: 13px;
+  }
+  
+  /* Toast */
+  .toast {
+    position: fixed;
+    top: 20px;
+    left: 50%;
+    transform: translateX(-50%) translateY(-120%);
+    background: var(--text);
+    color: white;
+    padding: 12px 20px;
+    border-radius: 12px;
+    font-size: 13px;
+    font-weight: 500;
+    box-shadow: var(--shadow-lg);
+    z-index: 1000;
+    transition: transform 0.3s cubic-bezier(0.2, 0.9, 0.3, 1);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    max-width: 90vw;
+  }
+  
+  .toast.show {
+    transform: translateX(-50%) translateY(0);
+  }
+  
+  .toast.success { background: var(--success); }
+  .toast.error { background: var(--danger); }
+  
+  /* Saved Records View */
+  .records-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 12px;
+    padding: 0 4px;
+  }
+  
+  .records-header h2 {
+    font-size: 15px;
+    font-weight: 600;
+  }
+  
+  .records-header .count {
+    font-size: 12px;
+    color: var(--text-dim);
+    background: var(--gold-light);
+    padding: 3px 10px;
+    border-radius: 20px;
+    font-weight: 500;
+  }
+  
+  .record-card {
+    background: var(--card);
+    border-radius: 12px;
+    padding: 14px;
+    margin-bottom: 10px;
+    box-shadow: var(--shadow);
+    border-left: 3px solid var(--primary);
+  }
+  
+  .record-card.recruit { border-left-color: var(--gold); }
+  
+  .record-meta {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 6px;
+    font-size: 11px;
+    color: var(--text-dim);
+  }
+  
+  .record-type {
+    padding: 2px 8px;
+    border-radius: 10px;
+    font-weight: 600;
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+  
+  .record-type.interview { background: #FEECEB; color: var(--primary-dark); }
+  .record-type.recruit { background: var(--gold-light); color: var(--primary-dark); }
+  
+  .record-name {
+    font-size: 15px;
+    font-weight: 600;
+    margin-bottom: 2px;
+  }
+  
+  .record-details {
+    font-size: 12px;
+    color: var(--text-dim);
+  }
+  
+  .record-sync-badge {
+    display: inline-block;
+    font-size: 10px;
+    padding: 2px 8px;
+    border-radius: 10px;
+    margin-top: 6px;
+  }
+  
+  .record-sync-badge.synced { background: var(--success-bg); color: var(--success); }
+  .record-sync-badge.pending { background: var(--warn-bg); color: var(--warn); }
+  
+  .record-actions {
+    display: flex;
+    gap: 6px;
+    margin-top: 10px;
+    padding-top: 10px;
+    border-top: 1px dashed var(--border);
+  }
+  
+  .record-actions button {
+    flex: 1;
+    padding: 7px;
+    border: 1px solid var(--border);
+    background: var(--bg);
+    border-radius: 7px;
+    font-family: inherit;
+    font-size: 11px;
+    cursor: pointer;
+    color: var(--text);
+  }
+  
+  .record-actions button.delete { color: var(--danger); }
+  
+  .empty-state {
+    text-align: center;
+    padding: 60px 20px;
+    color: var(--text-dim);
+  }
+  
+  .empty-state .icon {
+    font-size: 48px;
+    margin-bottom: 12px;
+    opacity: 0.4;
+  }
+  
+  .empty-state h3 {
+    font-size: 15px;
+    font-weight: 500;
+    margin-bottom: 4px;
+    color: var(--text);
+  }
+  
+  .empty-state p { font-size: 13px; }
+  
+  /* Config Panel */
+  .config-panel {
+    background: var(--card);
+    border-radius: 12px;
+    padding: 18px;
+    margin-bottom: 14px;
+    box-shadow: var(--shadow);
+  }
+  
+  .config-panel h3 {
+    font-size: 14px;
+    font-weight: 600;
+    margin-bottom: 4px;
+  }
+  
+  .config-panel p {
+    font-size: 12px;
+    color: var(--text-dim);
+    margin-bottom: 12px;
+  }
+  
+  .config-row {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 10px;
+  }
+  
+  .config-row .text-input { flex: 1; font-size: 12px; }
+  
+  .stats-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 8px;
+    margin-bottom: 14px;
+  }
+  
+  .stat-box {
+    background: var(--bg);
+    padding: 12px;
+    border-radius: 10px;
+    text-align: center;
+  }
+  
+  .stat-box .num {
+    font-size: 22px;
+    font-weight: 700;
+    color: var(--primary);
+  }
+  
+  .stat-box .lbl {
+    font-size: 11px;
+    color: var(--text-dim);
+  }
+  
+  /* Modal */
+  .modal-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.5);
+    z-index: 200;
+    display: none;
+    align-items: flex-end;
+    justify-content: center;
+  }
+  
+  .modal-overlay.show { display: flex; }
+  
+  .modal {
+    background: var(--card);
+    border-radius: 16px 16px 0 0;
+    padding: 24px 20px;
+    max-width: 500px;
+    width: 100%;
+    max-height: 85vh;
+    overflow-y: auto;
+    animation: slideUp 0.3s ease;
+  }
+  
+  @keyframes slideUp {
+    from { transform: translateY(100%); }
+    to { transform: translateY(0); }
+  }
+  
+  .modal h3 {
+    font-size: 16px;
+    font-weight: 600;
+    margin-bottom: 12px;
+  }
+  
+  .modal pre {
+    background: var(--bg);
+    padding: 12px;
+    border-radius: 8px;
+    font-size: 11px;
+    overflow-x: auto;
+    white-space: pre-wrap;
+    word-break: break-word;
+    font-family: 'Monaco', 'Courier New', monospace;
+    max-height: 300px;
+    overflow-y: auto;
+  }
+  
+  .modal .actions {
+    display: flex;
+    gap: 8px;
+    margin-top: 16px;
+  }
+  
+  /* PDF-like printed look */
+  @media print {
+    .status-bar, .tab-switcher, .action-bar, .btn { display: none; }
+    body { background: white; }
+    .q-card, .form-header, .customer-info { box-shadow: none; border: 1px solid #ddd; }
+  }
+</style>
+</head>
+<body>
+
+<!-- Status Bar -->
+<div class="status-bar">
+  <div class="brand">
+    <div class="logo">W</div>
+    <div class="title-box">
+      <div class="t1">Wirapong • AIA U-Thong</div>
+      <div class="t2">แบบฟอร์มสัมภาษณ์ลูกค้า</div>
+    </div>
+  </div>
+  <div class="status-indicator" id="connectionStatus">
+    <span class="dot"></span>
+    <span id="connectionText">ออนไลน์</span>
+  </div>
+</div>
+
+<!-- Tabs -->
+<div class="tab-switcher">
+  <button class="tab active" data-view="interview">📋 สัมภาษณ์ลูกค้า</button>
+  <button class="tab" data-view="recruit">💼 ชวนทำอาชีพ</button>
+  <button class="tab" data-view="records">📚 บันทึกทั้งหมด <span class="tab-badge" id="recordCount">0</span></button>
+  <button class="tab" data-view="settings">⚙️ ตั้งค่า</button>
+</div>
+
+<div class="container">
+
+  <!-- ======================== -->
+  <!-- VIEW 1: Interview Form -->
+  <!-- ======================== -->
+  <div class="form-view active" id="view-interview">
+    <form id="formInterview">
+      
+      <div class="form-header">
+        <h1>📋 สัมภาษณ์เพื่อบริการผู้ถือกรมธรรม์</h1>
+        <div class="desc">และบริการด้านการวางแผนด้านการเงิน</div>
+        <div class="date-line">
+          <span class="label">วันที่สัมภาษณ์</span>
+          <span class="date" id="dateInterview"></span>
+        </div>
+      </div>
+      
+      <!-- Q1: ลูกค้าของบริษัท -->
+      <div class="q-card" data-required>
+        <div class="q-label">
+          <div class="q-num">1</div>
+          <div class="q-text">คุณเป็นลูกค้าของบริษัท</div>
+        </div>
+        <div class="options row-2">
+          <label class="opt">
+            <input type="radio" name="q1" value="AIA">
+            <span class="check"></span>
+            <span class="opt-text">AIA</span>
+          </label>
+          <label class="opt">
+            <input type="radio" name="q1" value="other">
+            <span class="check"></span>
+            <span class="opt-text">บริษัทอื่น</span>
+          </label>
+        </div>
+        <div class="inline-group" id="q1OtherBox" style="display:none;">
+          <input type="text" class="text-input" name="q1_other" placeholder="ระบุบริษัท...">
+        </div>
+      </div>
+      
+      <!-- Q2: ความสัมพันธ์ -->
+      <div class="q-card">
+        <div class="q-label">
+          <div class="q-num">2</div>
+          <div class="q-text">ความสัมพันธ์กับตัวแทน</div>
+        </div>
+        <div class="options row-3">
+          <label class="opt">
+            <input type="radio" name="q2" value="friend">
+            <span class="check"></span>
+            <span class="opt-text">เป็นเพื่อน</span>
+          </label>
+          <label class="opt">
+            <input type="radio" name="q2" value="relative">
+            <span class="check"></span>
+            <span class="opt-text">เป็นญาติ</span>
+          </label>
+          <label class="opt">
+            <input type="radio" name="q2" value="referral">
+            <span class="check"></span>
+            <span class="opt-text">มีคนแนะนำ</span>
+          </label>
+          <label class="opt" style="grid-column: 1 / -1;">
+            <input type="radio" name="q2" value="other">
+            <span class="check"></span>
+            <span class="opt-text">อื่นๆ</span>
+          </label>
+        </div>
+        <div class="inline-group" id="q2OtherBox" style="display:none;">
+          <input type="text" class="text-input" name="q2_other" placeholder="ระบุความสัมพันธ์...">
+        </div>
+      </div>
+      
+      <!-- Q3: เหตุผลในการซื้อประกัน (multi) -->
+      <div class="q-card">
+        <div class="q-label">
+          <div class="q-num">3</div>
+          <div class="q-text">เหตุผลในการซื้อประกัน <span style="font-size:11px;color:var(--text-dim);font-weight:400;">(เลือกได้หลายข้อ)</span></div>
+        </div>
+        <div class="options">
+          <label class="opt checkbox">
+            <input type="checkbox" name="q3" value="medical">
+            <span class="check"></span>
+            <span class="opt-text">เพื่อยามเจ็บป่วยมีค่ารักษา</span>
+          </label>
+          <label class="opt checkbox">
+            <input type="checkbox" name="q3" value="retire">
+            <span class="check"></span>
+            <span class="opt-text">เพื่อยามแก่ชราได้มีเงินพอใช้</span>
+          </label>
+          <label class="opt checkbox">
+            <input type="checkbox" name="q3" value="education">
+            <span class="check"></span>
+            <span class="opt-text">เพื่อค่าเล่าเรียน</span>
+          </label>
+          <label class="opt checkbox">
+            <input type="checkbox" name="q3" value="family">
+            <span class="check"></span>
+            <span class="opt-text">เพื่อเป็นหลักประกันรายได้ของครอบครัว</span>
+          </label>
+          <label class="opt checkbox">
+            <input type="checkbox" name="q3" value="help">
+            <span class="check"></span>
+            <span class="opt-text">ช่วยเหลือญาติ</span>
+          </label>
+          <label class="opt checkbox">
+            <input type="checkbox" name="q3" value="obligation">
+            <span class="check"></span>
+            <span class="opt-text">เกรงใจคนแนะนำ</span>
+          </label>
+          <label class="opt checkbox">
+            <input type="checkbox" name="q3" value="other">
+            <span class="check"></span>
+            <span class="opt-text">อื่นๆ</span>
+          </label>
+        </div>
+        <div class="inline-group" id="q3OtherBox" style="display:none;">
+          <input type="text" class="text-input" name="q3_other" placeholder="ระบุเหตุผลอื่นๆ...">
+        </div>
+      </div>
+      
+      <!-- Q4: ซื้อกรมธรรม์นานเท่าไร -->
+      <div class="q-card">
+        <div class="q-label">
+          <div class="q-num">4</div>
+          <div class="q-text">ซื้อกรมธรรม์นานเท่าไร</div>
+        </div>
+        <div class="options row-3">
+          <label class="opt">
+            <input type="radio" name="q4" value="1y">
+            <span class="check"></span>
+            <span class="opt-text">1 ปี</span>
+          </label>
+          <label class="opt">
+            <input type="radio" name="q4" value="2y">
+            <span class="check"></span>
+            <span class="opt-text">2 ปี</span>
+          </label>
+          <label class="opt">
+            <input type="radio" name="q4" value="5y+">
+            <span class="check"></span>
+            <span class="opt-text">5 ปีขึ้นไป</span>
+          </label>
+          <label class="opt" style="grid-column: 1 / -1;">
+            <input type="radio" name="q4" value="other">
+            <span class="check"></span>
+            <span class="opt-text">อื่นๆ</span>
+          </label>
+        </div>
+        <div class="inline-group" id="q4OtherBox" style="display:none;">
+          <input type="text" class="text-input" name="q4_other" placeholder="ระบุระยะเวลา...">
+        </div>
+      </div>
+      
+      <!-- Q5: บุคคลในครอบครัวที่ซื้อประกัน -->
+      <div class="q-card">
+        <div class="q-label">
+          <div class="q-num">5</div>
+          <div class="q-text">บุคคลในครอบครัวที่ซื้อประกัน</div>
+        </div>
+        <div class="options row-2">
+          <label class="opt">
+            <input type="radio" name="q5" value="all">
+            <span class="check"></span>
+            <span class="opt-text">ซื้อทุกคน</span>
+          </label>
+          <label class="opt">
+            <input type="radio" name="q5" value="some">
+            <span class="check"></span>
+            <span class="opt-text">ซื้อเป็นบางคน</span>
+          </label>
+        </div>
+        <div class="inline-group" id="q5SomeBox" style="display:none;">
+          <input type="text" class="text-input" name="q5_reason" placeholder="เพราะ...">
+        </div>
+      </div>
+      
+      <!-- Q6: ความพอใจในการบริการ -->
+      <div class="q-card">
+        <div class="q-label">
+          <div class="q-num">6</div>
+          <div class="q-text">ความพอใจในความบริการของตัวแทน</div>
+        </div>
+        <div class="options row-3">
+          <label class="opt">
+            <input type="radio" name="q6" value="very">
+            <span class="check"></span>
+            <span class="opt-text">พอใจมาก</span>
+          </label>
+          <label class="opt">
+            <input type="radio" name="q6" value="mid">
+            <span class="check"></span>
+            <span class="opt-text">ปานกลาง</span>
+          </label>
+          <label class="opt">
+            <input type="radio" name="q6" value="no">
+            <span class="check"></span>
+            <span class="opt-text">ไม่พอใจ</span>
+          </label>
+          <label class="opt" style="grid-column: 1 / -1;">
+            <input type="radio" name="q6" value="other">
+            <span class="check"></span>
+            <span class="opt-text">อื่นๆ</span>
+          </label>
+        </div>
+        <div class="inline-group" id="q6OtherBox" style="display:none;">
+          <input type="text" class="text-input" name="q6_other" placeholder="ระบุความรู้สึก...">
+        </div>
+      </div>
+      
+      <!-- Q7: ต้องการบริการ -->
+      <div class="q-card">
+        <div class="q-label">
+          <div class="q-num">7</div>
+          <div class="q-text">ขณะนี้ต้องการการบริการ <span style="font-size:11px;color:var(--text-dim);font-weight:400;">(เลือกได้หลายข้อ)</span></div>
+        </div>
+        <div class="options row-2">
+          <label class="opt checkbox">
+            <input type="checkbox" name="q7" value="premium">
+            <span class="check"></span>
+            <span class="opt-text">ช่วยเก็บเบี้ยประกัน</span>
+          </label>
+          <label class="opt checkbox">
+            <input type="checkbox" name="q7" value="address">
+            <span class="check"></span>
+            <span class="opt-text">เปลี่ยนที่อยู่</span>
+          </label>
+          <label class="opt checkbox">
+            <input type="checkbox" name="q7" value="claim">
+            <span class="check"></span>
+            <span class="opt-text">เคลม</span>
+          </label>
+          <label class="opt checkbox">
+            <input type="checkbox" name="q7" value="other">
+            <span class="check"></span>
+            <span class="opt-text">อื่นๆ</span>
+          </label>
+        </div>
+        <div class="inline-group" id="q7OtherBox" style="display:none;">
+          <input type="text" class="text-input" name="q7_other" placeholder="ระบุ...">
+        </div>
+      </div>
+      
+      <!-- Q8: ทบทวนกรมธรรม์ -->
+      <div class="q-card">
+        <div class="q-label">
+          <div class="q-num">8</div>
+          <div class="q-text">เคยทบทวนกรมธรรม์บ้างหรือไม่</div>
+        </div>
+        <div class="options row-3">
+          <label class="opt">
+            <input type="radio" name="q8" value="often">
+            <span class="check"></span>
+            <span class="opt-text">บ่อยครั้ง</span>
+          </label>
+          <label class="opt">
+            <input type="radio" name="q8" value="never">
+            <span class="check"></span>
+            <span class="opt-text">ไม่เคยดู</span>
+          </label>
+          <label class="opt">
+            <input type="radio" name="q8" value="other">
+            <span class="check"></span>
+            <span class="opt-text">อื่นๆ</span>
+          </label>
+        </div>
+        <div class="inline-group" id="q8OtherBox" style="display:none;">
+          <input type="text" class="text-input" name="q8_other" placeholder="ระบุ...">
+        </div>
+      </div>
+      
+      <!-- Q9: เคยคุยเรื่องวางแผนการเงิน -->
+      <div class="q-card">
+        <div class="q-label">
+          <div class="q-num">9</div>
+          <div class="q-text">เคยมีใครคุยเรื่องการวางแผนทางการเงินให้ฟังบ้างไหม</div>
+        </div>
+        <div class="options row-3">
+          <label class="opt">
+            <input type="radio" name="q9" value="yes">
+            <span class="check"></span>
+            <span class="opt-text">เคย</span>
+          </label>
+          <label class="opt">
+            <input type="radio" name="q9" value="no">
+            <span class="check"></span>
+            <span class="opt-text">ไม่เคย</span>
+          </label>
+          <label class="opt">
+            <input type="radio" name="q9" value="other">
+            <span class="check"></span>
+            <span class="opt-text">อื่นๆ</span>
+          </label>
+        </div>
+        <div class="inline-group" id="q9OtherBox" style="display:none;">
+          <input type="text" class="text-input" name="q9_other" placeholder="ระบุ...">
+        </div>
+      </div>
+      
+      <!-- Highlight Quote -->
+      <div class="highlight-box">
+        "แผนนี้เป็นการช่วยสร้างภูมิคุ้มกันทางด้านการเงิน เพื่อปกป้องคุณจากปัญหาการเงินไปตลอดทุกช่วงของชีวิต"
+      </div>
+      
+      <!-- Q10: สนใจแผนไหน -->
+      <div class="q-card">
+        <div class="q-label">
+          <div class="q-num">10</div>
+          <div class="q-text">หากต้องการวางแผนทางด้านการเงิน ไม่ทราบสนใจแผนไหน <span style="font-size:11px;color:var(--text-dim);font-weight:400;">(เลือกได้หลายข้อ)</span></div>
+        </div>
+        <div class="options">
+          <label class="opt checkbox">
+            <input type="checkbox" name="q10" value="health">
+            <span class="check"></span>
+            <span class="opt-text">แผนเพื่อยามเจ็บไข้มีค่ารักษา <small style="display:block;opacity:0.7;font-size:11px;">เพราะค่ารักษา ร.พ. ปัจจุบันแพงมาก</small></span>
+          </label>
+          <label class="opt checkbox">
+            <input type="checkbox" name="q10" value="retire">
+            <span class="check"></span>
+            <span class="opt-text">แผนเพื่อยามแก่ชรามีเงินพอใช้ <small style="display:block;opacity:0.7;font-size:11px;">เพราะหลังเกษียณเรายังต้องกินใช้ปกติจนกว่าจะจากไป</small></span>
+          </label>
+          <label class="opt checkbox">
+            <input type="checkbox" name="q10" value="education">
+            <span class="check"></span>
+            <span class="opt-text">แผนเพื่อค่าเล่าเรียนบุตร <small style="display:block;opacity:0.7;font-size:11px;">เพราะไม่ว่าเราจะอยู่หรือไม่ ลูกๆ ยังต้องเรียนหนังสือจนจบ</small></span>
+          </label>
+          <label class="opt checkbox">
+            <input type="checkbox" name="q10" value="income">
+            <span class="check"></span>
+            <span class="opt-text">แผนคุ้มครองรายได้ของครอบครัว <small style="display:block;opacity:0.7;font-size:11px;">เพราะไม่ว่าเราจะอยู่หรือไม่ ครอบครัวยังต้องใช้จ่ายปกติ</small></span>
+          </label>
+          <label class="opt checkbox">
+            <input type="checkbox" name="q10" value="other">
+            <span class="check"></span>
+            <span class="opt-text">อื่นๆ</span>
+          </label>
+        </div>
+        <div class="inline-group" id="q10OtherBox" style="display:none;">
+          <input type="text" class="text-input" name="q10_other" placeholder="ระบุแผนที่สนใจ...">
+        </div>
+      </div>
+      
+      <!-- Q11: ออมเดือนละเท่าไร -->
+      <div class="q-card">
+        <div class="q-label">
+          <div class="q-num">11</div>
+          <div class="q-text">ถ้ามีแผนที่ทำให้คลายกังวลได้ สะดวกออมเดือนละเท่าไหร่ที่ไม่เดือดร้อน</div>
+        </div>
+        <div class="options row-3">
+          <label class="opt">
+            <input type="radio" name="q11" value="500">
+            <span class="check"></span>
+            <span class="opt-text">500 บาท</span>
+          </label>
+          <label class="opt">
+            <input type="radio" name="q11" value="1000">
+            <span class="check"></span>
+            <span class="opt-text">1,000 บาท</span>
+          </label>
+          <label class="opt">
+            <input type="radio" name="q11" value="2000">
+            <span class="check"></span>
+            <span class="opt-text">2,000 บาท</span>
+          </label>
+          <label class="opt" style="grid-column: 1 / -1;">
+            <input type="radio" name="q11" value="other">
+            <span class="check"></span>
+            <span class="opt-text">อื่นๆ</span>
+          </label>
+        </div>
+        <div class="inline-group" id="q11OtherBox" style="display:none;">
+          <input type="text" class="text-input" name="q11_other" placeholder="ระบุจำนวน (บาท)...">
+        </div>
+      </div>
+      
+      <!-- Q12: ตัดสินใจได้เอง -->
+      <div class="q-card">
+        <div class="q-label">
+          <div class="q-num">12</div>
+          <div class="q-text">ตัดสินใจได้เองหรือต้องปรึกษาใครหรือไม่</div>
+        </div>
+        <div class="options row-2">
+          <label class="opt">
+            <input type="radio" name="q12" value="self">
+            <span class="check"></span>
+            <span class="opt-text">ได้ด้วยตนเอง</span>
+          </label>
+          <label class="opt">
+            <input type="radio" name="q12" value="consult">
+            <span class="check"></span>
+            <span class="opt-text">ไม่ได้ ต้องปรึกษา</span>
+          </label>
+        </div>
+        <div class="inline-group" id="q12ConsultBox" style="display:none;">
+          <input type="text" class="text-input" name="q12_consult" placeholder="ปรึกษาใคร...">
+        </div>
+      </div>
+      
+      <!-- Highlight: closing -->
+      <div class="highlight-box">
+        ถ้าดิฉันมีโครงการที่สามารถรองรับสิ่งที่คุณห่วงหรือมีงานที่อยู่ในความต้องการของคุณ ดิฉันขออนุญาตติดต่อมาหาคุณใหม่นะคะ
+      </div>
+      
+      <!-- Customer Info -->
+      <div class="customer-info">
+        <div class="section-title">👤 ข้อมูลลูกค้า</div>
+        
+        <div class="field-grid">
+          <div class="field-grid cols-2" style="margin-bottom:0;">
+            <div class="field">
+              <label>ชื่อ-นามสกุล <span style="color:var(--danger);">*</span></label>
+              <input type="text" class="text-input" name="fullname" required placeholder="เช่น สมชาย ใจดี">
+            </div>
+            <div class="field">
+              <label>ชื่อเล่น</label>
+              <input type="text" class="text-input" name="nickname" placeholder="เช่น ชาย">
+            </div>
+          </div>
+          
+          <div class="field-grid cols-2" style="margin-bottom:0;">
+            <div class="field">
+              <label>วันเกิด</label>
+              <input type="date" class="text-input" name="birthdate">
+            </div>
+            <div class="field">
+              <label>อาชีพ</label>
+              <input type="text" class="text-input" name="occupation" placeholder="เช่น เจ้าของร้านอาหาร">
+            </div>
+          </div>
+          
+          <div class="field-grid cols-2" style="margin-bottom:0;">
+            <div class="field">
+              <label>เบอร์โทร</label>
+              <input type="tel" class="text-input" name="phone" placeholder="0XX-XXX-XXXX">
+            </div>
+            <div class="field">
+              <label>LINE ID</label>
+              <input type="text" class="text-input" name="lineid" placeholder="@xxx">
+            </div>
+          </div>
+          
+          <div class="field">
+            <label>ที่อยู่ (ส่ง จ.ม. ถึง)</label>
+            <textarea class="text-area" name="address" placeholder="บ้านเลขที่/หมู่/ตำบล/อำเภอ/จังหวัด/รหัสไปรษณีย์"></textarea>
+          </div>
+          
+          <div class="field">
+            <label>สถานะ</label>
+            <div class="family-status">
+              <label class="opt-small">
+                <input type="radio" name="marital" value="single">
+                <span>โสด</span>
+              </label>
+              <label class="opt-small">
+                <input type="radio" name="marital" value="married">
+                <span>สมรส</span>
+              </label>
+              <label class="opt-small">
+                <input type="radio" name="marital" value="divorced">
+                <span>หย่า/หม้าย</span>
+              </label>
+              <label class="opt-small">
+                <input type="radio" name="marital" value="other">
+                <span>อื่นๆ</span>
+              </label>
+            </div>
+            <div class="inline-group" id="maritalOtherBox" style="display:none; margin-top:8px;">
+              <input type="text" class="text-input" name="marital_other" placeholder="ระบุสถานะ...">
+            </div>
+          </div>
+          
+          <div class="children-grid">
+            <div class="field">
+              <label>บุตรหญิง (คน)</label>
+              <input type="number" class="text-input" name="daughters" min="0" max="20" placeholder="0">
+            </div>
+            <div class="field">
+              <label>บุตรชาย (คน)</label>
+              <input type="number" class="text-input" name="sons" min="0" max="20" placeholder="0">
+            </div>
+          </div>
+          
+          <div class="field">
+            <label>หมายเหตุ / ประเด็นน่าสนใจที่คุยกัน</label>
+            <textarea class="text-area" name="notes" placeholder="จดสั้นๆ เพื่อ Follow-up ครั้งถัดไป..."></textarea>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Action Bar -->
+      <div class="action-bar">
+        <button type="button" class="btn btn-ghost" onclick="clearForm('formInterview')">🗑️</button>
+        <button type="button" class="btn btn-secondary" onclick="previewForm('interview')">👁️ ดูสรุป</button>
+        <button type="submit" class="btn btn-primary">💾 บันทึก</button>
+      </div>
+    </form>
+  </div>
+
+  <!-- ======================== -->
+  <!-- VIEW 2: Recruit Form -->
+  <!-- ======================== -->
+  <div class="form-view" id="view-recruit">
+    <form id="formRecruit">
+      
+      <div class="form-header" style="border-top-color: var(--gold);">
+        <h1>💼 แบบสอบถามการสร้างรายได้เพิ่ม</h1>
+        <div class="desc">สำหรับพิจารณาโอกาสร่วมงาน (Recruit)</div>
+        <div class="date-line">
+          <span class="label">วันที่สัมภาษณ์</span>
+          <span class="date" id="dateRecruit"></span>
+        </div>
+      </div>
+      
+      <div class="highlight-box">
+        ขออนุญาตถามคำถามเพิ่มเติม เผื่อจะเป็นประโยชน์กับคุณ
+      </div>
+      
+      <!-- R1: งานที่ทำอยู่ -->
+      <div class="q-card">
+        <div class="q-label">
+          <div class="q-num">1</div>
+          <div class="q-text">รู้สึกยังไงกับงานที่ทำอยู่</div>
+        </div>
+        <textarea class="text-area" name="r1" placeholder="ฟังและจดคำตอบของลูกค้า..."></textarea>
+      </div>
+      
+      <!-- R2: คิดจะเปลี่ยนงาน -->
+      <div class="q-card">
+        <div class="q-label">
+          <div class="q-num">2</div>
+          <div class="q-text">คิดจะเปลี่ยนงานไหม? ทำไม?</div>
+        </div>
+        <div class="options row-3" style="margin-bottom:8px;">
+          <label class="opt">
+            <input type="radio" name="r2" value="yes">
+            <span class="check"></span>
+            <span class="opt-text">คิดจะเปลี่ยน</span>
+          </label>
+          <label class="opt">
+            <input type="radio" name="r2" value="no">
+            <span class="check"></span>
+            <span class="opt-text">ไม่คิดเปลี่ยน</span>
+          </label>
+          <label class="opt">
+            <input type="radio" name="r2" value="other">
+            <span class="check"></span>
+            <span class="opt-text">อื่นๆ</span>
+          </label>
+        </div>
+        <textarea class="text-area" name="r2_reason" placeholder="เหตุผล / รายละเอียด..."></textarea>
+      </div>
+      
+      <!-- R3: เปิดโอกาส -->
+      <div class="q-card">
+        <div class="q-label">
+          <div class="q-num">3</div>
+          <div class="q-text">เป็นคนเปิดโอกาสให้ตัวเอง ในการเรียนรู้สิ่งใหม่ๆ ไหม</div>
+        </div>
+        <div class="options row-3">
+          <label class="opt">
+            <input type="radio" name="r3" value="yes">
+            <span class="check"></span>
+            <span class="opt-text">เปิด</span>
+          </label>
+          <label class="opt">
+            <input type="radio" name="r3" value="no">
+            <span class="check"></span>
+            <span class="opt-text">ไม่เปิด</span>
+          </label>
+          <label class="opt">
+            <input type="radio" name="r3" value="other">
+            <span class="check"></span>
+            <span class="opt-text">อื่นๆ</span>
+          </label>
+        </div>
+        <div class="inline-group" id="r3OtherBox" style="display:none;">
+          <input type="text" class="text-input" name="r3_other" placeholder="ระบุ...">
+        </div>
+      </div>
+      
+      <!-- R4: สนใจเรียนรู้ -->
+      <div class="q-card">
+        <div class="q-label">
+          <div class="q-num">4</div>
+          <div class="q-text">ตอนนี้บริษัทเรามีสินค้าหลากหลาย ไม่ใช่แค่ประกันชีวิตอย่างเดียว สนใจที่จะเรียนรู้ไหม</div>
+        </div>
+        <div class="options row-3">
+          <label class="opt">
+            <input type="radio" name="r4" value="yes">
+            <span class="check"></span>
+            <span class="opt-text">สนใจ</span>
+          </label>
+          <label class="opt">
+            <input type="radio" name="r4" value="no">
+            <span class="check"></span>
+            <span class="opt-text">ไม่สนใจ</span>
+          </label>
+          <label class="opt">
+            <input type="radio" name="r4" value="other">
+            <span class="check"></span>
+            <span class="opt-text">อื่นๆ</span>
+          </label>
+        </div>
+        <div class="inline-group" id="r4OtherBox" style="display:none;">
+          <input type="text" class="text-input" name="r4_other" placeholder="ระบุ...">
+        </div>
+      </div>
+      
+      <div class="highlight-box">
+        ถ้าสนใจ ก็ให้นัดพบกับหัวหน้า ด้วยการถามว่า "สะดวกวันไหนถึงวันไหน กี่โมงถึงกี่โมง"
+      </div>
+      
+      <!-- Appointment -->
+      <div class="q-card">
+        <div class="q-label">
+          <div class="q-num">📅</div>
+          <div class="q-text">นัดพบวันไหน</div>
+        </div>
+        <div class="field-grid cols-2">
+          <div class="field">
+            <label>วันที่</label>
+            <input type="date" class="text-input" name="appt_date">
+          </div>
+          <div class="field">
+            <label>เวลา</label>
+            <input type="time" class="text-input" name="appt_time">
+          </div>
+        </div>
+      </div>
+      
+      <!-- Customer Info -->
+      <div class="customer-info">
+        <div class="section-title">👤 ข้อมูลผู้สมัคร</div>
+        
+        <div class="field-grid">
+          <div class="field-grid cols-2" style="margin-bottom:0;">
+            <div class="field">
+              <label>ชื่อ-นามสกุล <span style="color:var(--danger);">*</span></label>
+              <input type="text" class="text-input" name="fullname" required placeholder="ชื่อเต็ม">
+            </div>
+            <div class="field">
+              <label>ชื่อเล่น</label>
+              <input type="text" class="text-input" name="nickname">
+            </div>
+          </div>
+          
+          <div class="field-grid cols-2" style="margin-bottom:0;">
+            <div class="field">
+              <label>วันเกิด</label>
+              <input type="date" class="text-input" name="birthdate">
+            </div>
+            <div class="field">
+              <label>อาชีพปัจจุบัน</label>
+              <input type="text" class="text-input" name="occupation">
+            </div>
+          </div>
+          
+          <div class="field-grid cols-2" style="margin-bottom:0;">
+            <div class="field">
+              <label>เบอร์โทร</label>
+              <input type="tel" class="text-input" name="phone">
+            </div>
+            <div class="field">
+              <label>LINE ID</label>
+              <input type="text" class="text-input" name="lineid">
+            </div>
+          </div>
+          
+          <div class="field">
+            <label>ที่อยู่</label>
+            <textarea class="text-area" name="address"></textarea>
+          </div>
+          
+          <div class="field">
+            <label>สถานะ</label>
+            <div class="family-status">
+              <label class="opt-small">
+                <input type="radio" name="marital" value="single">
+                <span>โสด</span>
+              </label>
+              <label class="opt-small">
+                <input type="radio" name="marital" value="married">
+                <span>สมรส</span>
+              </label>
+              <label class="opt-small">
+                <input type="radio" name="marital" value="divorced">
+                <span>หย่า/หม้าย</span>
+              </label>
+              <label class="opt-small">
+                <input type="radio" name="marital" value="other">
+                <span>อื่นๆ</span>
+              </label>
+            </div>
+            <div class="inline-group" id="maritalOtherBoxR" style="display:none; margin-top:8px;">
+              <input type="text" class="text-input" name="marital_other" placeholder="ระบุสถานะ...">
+            </div>
+          </div>
+          
+          <div class="children-grid">
+            <div class="field">
+              <label>บุตรหญิง (คน)</label>
+              <input type="number" class="text-input" name="daughters" min="0" max="20">
+            </div>
+            <div class="field">
+              <label>บุตรชาย (คน)</label>
+              <input type="number" class="text-input" name="sons" min="0" max="20">
+            </div>
+          </div>
+          
+          <div class="field">
+            <label>หมายเหตุ</label>
+            <textarea class="text-area" name="notes" placeholder="ประเด็นสำคัญที่ต้องจำ..."></textarea>
+          </div>
+        </div>
+      </div>
+      
+      <div class="action-bar">
+        <button type="button" class="btn btn-ghost" onclick="clearForm('formRecruit')">🗑️</button>
+        <button type="button" class="btn btn-secondary" onclick="previewForm('recruit')">👁️ ดูสรุป</button>
+        <button type="submit" class="btn btn-primary">💾 บันทึก</button>
+      </div>
+    </form>
+  </div>
+
+  <!-- ======================== -->
+  <!-- VIEW 3: Records -->
+  <!-- ======================== -->
+  <div class="form-view" id="view-records">
+    <div class="stats-grid">
+      <div class="stat-box">
+        <div class="num" id="statTotal">0</div>
+        <div class="lbl">รวมทั้งหมด</div>
+      </div>
+      <div class="stat-box">
+        <div class="num" id="statInterview">0</div>
+        <div class="lbl">สัมภาษณ์</div>
+      </div>
+      <div class="stat-box">
+        <div class="num" id="statRecruit">0</div>
+        <div class="lbl">Recruit</div>
+      </div>
+    </div>
+    
+    <div class="records-header">
+      <h2>📚 บันทึกทั้งหมด</h2>
+      <span class="count" id="recordsCountLabel">0 รายการ</span>
+    </div>
+    
+    <div id="recordsList"></div>
+    
+    <div class="action-bar">
+      <button type="button" class="btn btn-secondary" onclick="exportAllCSV()">📥 Export CSV</button>
+      <button type="button" class="btn btn-primary" onclick="syncAllPending()">☁️ Sync ทั้งหมด</button>
+    </div>
+  </div>
+
+  <!-- ======================== -->
+  <!-- VIEW 4: Settings -->
+  <!-- ======================== -->
+  <div class="form-view" id="view-settings">
+    <div class="config-panel">
+      <h3>⚙️ การเชื่อมต่อ Google Sheet</h3>
+      <p>ใส่ URL ของ Google Apps Script Web App (จาก Phase 2) เพื่อให้ข้อมูลไหลเข้า Sheet อัตโนมัติ</p>
+      
+      <div class="field">
+        <label style="font-size:12px;color:var(--text-dim);margin-bottom:4px;display:block;">Google Apps Script URL</label>
+        <input type="url" class="text-input" id="gasUrl" placeholder="https://script.google.com/macros/s/..." style="font-size:12px;">
+      </div>
+      
+      <div class="config-row" style="margin-top:10px;">
+        <button type="button" class="btn btn-secondary" onclick="saveConfig()">💾 บันทึก</button>
+        <button type="button" class="btn btn-primary" onclick="testConnection()">🔌 ทดสอบ</button>
+      </div>
+    </div>
+    
+    <div class="config-panel">
+      <h3>📦 จัดการข้อมูล</h3>
+      <p>ข้อมูลทั้งหมดเก็บในเครื่องของคุณ (LocalStorage) กรุณา Export เป็นระยะเพื่อ Backup</p>
+      
+      <div class="config-row">
+        <button type="button" class="btn btn-secondary" onclick="exportAllCSV()">📥 Export CSV</button>
+        <button type="button" class="btn btn-secondary" onclick="exportAllJSON()">📄 Export JSON</button>
+      </div>
+      <div class="config-row">
+        <button type="button" class="btn btn-ghost" onclick="importJSON()" style="color:var(--text);border:1px solid var(--border);">📂 Import JSON</button>
+        <button type="button" class="btn btn-ghost" onclick="clearAllData()" style="color:var(--danger);border:1px solid var(--danger);">🗑️ ล้างทั้งหมด</button>
+      </div>
+      
+      <input type="file" id="importFile" accept=".json" style="display:none;">
+    </div>
+    
+    <div class="config-panel">
+      <h3>ℹ️ เกี่ยวกับ</h3>
+      <p style="margin-bottom:8px;">
+        <strong>Wirapong Customer Interview App</strong><br>
+        Version 1.0 • Offline-first Web App<br>
+        สำหรับใช้พบลูกค้าและเก็บข้อมูล Name List
+      </p>
+      <p style="font-size:11px;line-height:1.6;">
+        💡 <strong>Tips</strong><br>
+        • เพิ่มหน้านี้ลง Home Screen เพื่อใช้งานเหมือน App<br>
+        • Safari: กด Share → Add to Home Screen<br>
+        • Chrome: เมนู ⋮ → Install App<br>
+        • ข้อมูลเก็บในเครื่อง ถ้าลบ browser cache จะหายหมด — Export เป็นระยะ!
+      </p>
+    </div>
+  </div>
+
+</div>
+
+<!-- Toast -->
+<div class="toast" id="toast"></div>
+
+<!-- Preview Modal -->
+<div class="modal-overlay" id="previewModal">
+  <div class="modal">
+    <h3>📋 สรุปข้อมูล</h3>
+    <pre id="previewContent"></pre>
+    <div class="actions">
+      <button class="btn btn-secondary" onclick="closeModal()">ปิด</button>
+      <button class="btn btn-primary" onclick="copyPreview()">📋 Copy</button>
+    </div>
+  </div>
+</div>
+
+<script>
+/* ================================
+ * Wirapong Customer Interview App
+ * Offline-first • Auto-sync
+ * ================================ */
+
+const STORAGE_KEY = 'wirapong_interviews_v1';
+const CONFIG_KEY = 'wirapong_config_v1';
+
+// Labels for human-readable output
+const LABELS = {
+  // Interview
+  q1: { AIA: 'AIA', other: 'บริษัทอื่น' },
+  q2: { friend: 'เป็นเพื่อน', relative: 'เป็นญาติ', referral: 'มีคนแนะนำ', other: 'อื่นๆ' },
+  q3: { medical: 'เพื่อยามเจ็บป่วย', retire: 'เพื่อยามแก่ชรา', education: 'เพื่อค่าเล่าเรียน', family: 'หลักประกันครอบครัว', help: 'ช่วยเหลือญาติ', obligation: 'เกรงใจคนแนะนำ', other: 'อื่นๆ' },
+  q4: { '1y': '1 ปี', '2y': '2 ปี', '5y+': '5 ปีขึ้นไป', other: 'อื่นๆ' },
+  q5: { all: 'ซื้อทุกคน', some: 'ซื้อเป็นบางคน' },
+  q6: { very: 'พอใจมาก', mid: 'ปานกลาง', no: 'ไม่พอใจ', other: 'อื่นๆ' },
+  q7: { premium: 'ช่วยเก็บเบี้ย', address: 'เปลี่ยนที่อยู่', claim: 'เคลม', other: 'อื่นๆ' },
+  q8: { often: 'บ่อยครั้ง', never: 'ไม่เคยดู', other: 'อื่นๆ' },
+  q9: { yes: 'เคย', no: 'ไม่เคย', other: 'อื่นๆ' },
+  q10: { health: 'แผนสุขภาพ', retire: 'แผนเกษียณ', education: 'แผนการศึกษาบุตร', income: 'แผนคุ้มครองรายได้', other: 'อื่นๆ' },
+  q11: { '500': '500 บาท', '1000': '1,000 บาท', '2000': '2,000 บาท', other: 'อื่นๆ' },
+  q12: { self: 'ตัดสินใจเอง', consult: 'ต้องปรึกษา' },
+  // Recruit
+  r2: { yes: 'คิดจะเปลี่ยน', no: 'ไม่คิดเปลี่ยน', other: 'อื่นๆ' },
+  r3: { yes: 'เปิดโอกาส', no: 'ไม่เปิด', other: 'อื่นๆ' },
+  r4: { yes: 'สนใจ', no: 'ไม่สนใจ', other: 'อื่นๆ' },
+  marital: { single: 'โสด', married: 'สมรส', divorced: 'หย่า/หม้าย', other: 'อื่นๆ' }
+};
+
+// ---- Utilities ----
+function $(sel) { return document.querySelector(sel); }
+function $$(sel) { return document.querySelectorAll(sel); }
+
+function formatDate(d) {
+  const date = d ? new Date(d) : new Date();
+  return date.toLocaleDateString('th-TH', { year: 'numeric', month: 'long', day: 'numeric' });
+}
+
+function formatDateTime(d) {
+  const date = d ? new Date(d) : new Date();
+  return date.toLocaleString('th-TH', { year: 'numeric', month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' });
+}
+
+function showToast(msg, type = 'success') {
+  const toast = $('#toast');
+  toast.className = 'toast ' + type;
+  toast.innerHTML = (type === 'success' ? '✅ ' : type === 'error' ? '❌ ' : 'ℹ️ ') + msg;
+  toast.classList.add('show');
+  setTimeout(() => toast.classList.remove('show'), 2800);
+}
+
+// ---- Tab Switching ----
+$$('.tab').forEach(tab => {
+  tab.addEventListener('click', () => {
+    $$('.tab').forEach(t => t.classList.remove('active'));
+    tab.classList.add('active');
+    $$('.form-view').forEach(v => v.classList.remove('active'));
+    $('#view-' + tab.dataset.view).classList.add('active');
+    window.scrollTo(0, 0);
+    if (tab.dataset.view === 'records') renderRecords();
+  });
+});
+
+// ---- Set today's dates ----
+$('#dateInterview').textContent = formatDate();
+$('#dateRecruit').textContent = formatDate();
+
+// ---- Conditional reveal ----
+function bindConditional(radioName, targetBoxId, triggerValue) {
+  document.querySelectorAll(`input[name="${radioName}"]`).forEach(r => {
+    r.addEventListener('change', () => {
+      const box = document.getElementById(targetBoxId);
+      if (box) box.style.display = r.value === triggerValue && r.checked ? 'flex' : 'none';
+    });
+  });
+}
+
+bindConditional('q1', 'q1OtherBox', 'other');
+bindConditional('q2', 'q2OtherBox', 'other');
+bindConditional('q4', 'q4OtherBox', 'other');
+bindConditional('q5', 'q5SomeBox', 'some');
+bindConditional('q6', 'q6OtherBox', 'other');
+bindConditional('q8', 'q8OtherBox', 'other');
+bindConditional('q9', 'q9OtherBox', 'other');
+bindConditional('q11', 'q11OtherBox', 'other');
+bindConditional('q12', 'q12ConsultBox', 'consult');
+bindConditional('r3', 'r3OtherBox', 'other');
+bindConditional('r4', 'r4OtherBox', 'other');
+
+// Q3 (checkbox) "อื่นๆ"
+document.querySelectorAll('input[name="q3"]').forEach(c => {
+  c.addEventListener('change', () => {
+    const other = document.querySelector('input[name="q3"][value="other"]');
+    document.getElementById('q3OtherBox').style.display = other.checked ? 'flex' : 'none';
+  });
+});
+
+// Q7 checkbox reveal (already exists but keeping for clarity)
+document.querySelectorAll('input[name="q7"]').forEach(c => {
+  c.addEventListener('change', () => {
+    const other = document.querySelector('input[name="q7"][value="other"]');
+    document.getElementById('q7OtherBox').style.display = other.checked ? 'flex' : 'none';
+  });
+});
+
+// Q10 (checkbox) "อื่นๆ"
+document.querySelectorAll('input[name="q10"]').forEach(c => {
+  c.addEventListener('change', () => {
+    const other = document.querySelector('input[name="q10"][value="other"]');
+    document.getElementById('q10OtherBox').style.display = other.checked ? 'flex' : 'none';
+  });
+});
+
+// Marital "อื่นๆ" — interview form
+document.querySelectorAll('#formInterview input[name="marital"]').forEach(r => {
+  r.addEventListener('change', () => {
+    document.getElementById('maritalOtherBox').style.display = r.value === 'other' && r.checked ? 'flex' : 'none';
+  });
+});
+
+// Marital "อื่นๆ" — recruit form
+document.querySelectorAll('#formRecruit input[name="marital"]').forEach(r => {
+  r.addEventListener('change', () => {
+    document.getElementById('maritalOtherBoxR').style.display = r.value === 'other' && r.checked ? 'flex' : 'none';
+  });
+});
+
+// ---- Answered indicator ----
+function updateAnsweredIndicator() {
+  document.querySelectorAll('.q-card').forEach(card => {
+    const hasAnswer = card.querySelector('input:checked, input[type="text"]:not([value=""])') ||
+                      [...card.querySelectorAll('textarea')].some(t => t.value.trim());
+    if (hasAnswer) card.classList.add('answered');
+    else card.classList.remove('answered');
+  });
+}
+
+document.addEventListener('change', updateAnsweredIndicator);
+document.addEventListener('input', updateAnsweredIndicator);
+
+// ---- Form Serialization ----
+function serializeForm(formId) {
+  const form = document.getElementById(formId);
+  const data = {};
+  
+  // Get all unique field names
+  const processed = new Set();
+  form.querySelectorAll('input, textarea, select').forEach(el => {
+    if (!el.name || processed.has(el.name)) return;
+    
+    // Checkboxes: collect array
+    if (el.type === 'checkbox') {
+      const values = [...form.querySelectorAll(`input[name="${el.name}"]:checked`)].map(c => c.value);
+      if (values.length) data[el.name] = values;
+      processed.add(el.name);
+    }
+    // Radios
+    else if (el.type === 'radio') {
+      const selected = form.querySelector(`input[name="${el.name}"]:checked`);
+      if (selected) data[el.name] = selected.value;
+      processed.add(el.name);
+    }
+    else {
+      const val = el.value.trim();
+      if (val) data[el.name] = val;
+    }
+  });
+  
+  return data;
+}
+
+function clearForm(formId) {
+  if (!confirm('ล้างข้อมูลในฟอร์มนี้?')) return;
+  document.getElementById(formId).reset();
+  // Close all "other" boxes
+  document.querySelectorAll('[id$="OtherBox"], [id$="SomeBox"], [id$="ConsultBox"], [id="q7OtherBox"], [id="maritalOtherBox"], [id="maritalOtherBoxR"]').forEach(b => {
+    if (b) b.style.display = 'none';
+  });
+  updateAnsweredIndicator();
+  showToast('ล้างฟอร์มแล้ว');
+}
+
+// ---- Preview ----
+function previewForm(type) {
+  const formId = type === 'interview' ? 'formInterview' : 'formRecruit';
+  const data = serializeForm(formId);
+  const summary = buildSummary(data, type);
+  $('#previewContent').textContent = summary;
+  $('#previewModal').classList.add('show');
+}
+
+function buildSummary(data, type) {
+  const lines = [];
+  lines.push('═══════════════════════════');
+  lines.push(type === 'interview' ? '📋 สัมภาษณ์ลูกค้า' : '💼 แบบสอบถาม Recruit');
+  lines.push('วันที่: ' + formatDate());
+  lines.push('═══════════════════════════\n');
+  
+  if (data.fullname) lines.push('👤 ' + data.fullname + (data.nickname ? ' (' + data.nickname + ')' : ''));
+  if (data.phone) lines.push('📞 ' + data.phone);
+  if (data.occupation) lines.push('💼 ' + data.occupation);
+  if (data.marital) lines.push('💑 สถานะ: ' + LABELS.marital[data.marital] + (data.marital_other ? ' (' + data.marital_other + ')' : ''));
+  const children = (parseInt(data.daughters) || 0) + (parseInt(data.sons) || 0);
+  if (children) lines.push('👶 บุตร: ' + (data.daughters || 0) + ' หญิง, ' + (data.sons || 0) + ' ชาย');
+  lines.push('');
+  
+  if (type === 'interview') {
+    if (data.q1) lines.push('1. ลูกค้าของ: ' + LABELS.q1[data.q1] + (data.q1_other ? ' (' + data.q1_other + ')' : ''));
+    if (data.q2) lines.push('2. ความสัมพันธ์: ' + LABELS.q2[data.q2] + (data.q2_other ? ' (' + data.q2_other + ')' : ''));
+    if (data.q3) lines.push('3. เหตุผลซื้อ: ' + data.q3.map(v => LABELS.q3[v]).join(', ') + (data.q3_other ? ' (' + data.q3_other + ')' : ''));
+    if (data.q4) lines.push('4. ซื้อมา: ' + LABELS.q4[data.q4] + (data.q4_other ? ' (' + data.q4_other + ')' : ''));
+    if (data.q5) lines.push('5. ครอบครัว: ' + LABELS.q5[data.q5] + (data.q5_reason ? ' (' + data.q5_reason + ')' : ''));
+    if (data.q6) lines.push('6. พอใจบริการ: ' + LABELS.q6[data.q6] + (data.q6_other ? ' (' + data.q6_other + ')' : ''));
+    if (data.q7) lines.push('7. ต้องการ: ' + data.q7.map(v => LABELS.q7[v]).join(', ') + (data.q7_other ? ' (' + data.q7_other + ')' : ''));
+    if (data.q8) lines.push('8. ทบทวนกรมธรรม์: ' + LABELS.q8[data.q8] + (data.q8_other ? ' (' + data.q8_other + ')' : ''));
+    if (data.q9) lines.push('9. เคยวางแผนการเงิน: ' + LABELS.q9[data.q9] + (data.q9_other ? ' (' + data.q9_other + ')' : ''));
+    if (data.q10) lines.push('10. สนใจแผน: ' + data.q10.map(v => LABELS.q10[v]).join(', ') + (data.q10_other ? ' (' + data.q10_other + ')' : ''));
+    if (data.q11) lines.push('11. ออมเดือนละ: ' + LABELS.q11[data.q11] + (data.q11_other ? ' (' + data.q11_other + ')' : ''));
+    if (data.q12) lines.push('12. ตัดสินใจ: ' + LABELS.q12[data.q12] + (data.q12_consult ? ' (ปรึกษา ' + data.q12_consult + ')' : ''));
+  } else {
+    if (data.r1) lines.push('1. งานปัจจุบัน: ' + data.r1);
+    if (data.r2) lines.push('2. คิดเปลี่ยนงาน: ' + LABELS.r2[data.r2]);
+    if (data.r2_reason) lines.push('   เหตุผล: ' + data.r2_reason);
+    if (data.r3) lines.push('3. เปิดโอกาส: ' + LABELS.r3[data.r3] + (data.r3_other ? ' (' + data.r3_other + ')' : ''));
+    if (data.r4) lines.push('4. สนใจเรียนรู้: ' + LABELS.r4[data.r4] + (data.r4_other ? ' (' + data.r4_other + ')' : ''));
+    if (data.appt_date) lines.push('📅 นัดพบ: ' + data.appt_date + (data.appt_time ? ' เวลา ' + data.appt_time : ''));
+  }
+  
+  if (data.notes) lines.push('\n📝 หมายเหตุ: ' + data.notes);
+  
+  return lines.join('\n');
+}
+
+function closeModal() {
+  $('#previewModal').classList.remove('show');
+}
+
+function copyPreview() {
+  const text = $('#previewContent').textContent;
+  navigator.clipboard.writeText(text).then(() => {
+    showToast('Copy แล้ว');
+    closeModal();
+  });
+}
+
+$('#previewModal').addEventListener('click', (e) => {
+  if (e.target.id === 'previewModal') closeModal();
+});
+
+// ---- Save to LocalStorage ----
+function getRecords() {
+  try {
+    return JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]');
+  } catch { return []; }
+}
+
+function saveRecord(data, type) {
+  const records = getRecords();
+  const record = {
+    id: Date.now() + '_' + Math.random().toString(36).substr(2, 6),
+    type: type,
+    data: data,
+    createdAt: new Date().toISOString(),
+    synced: false
+  };
+  records.unshift(record);
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(records));
+  updateRecordCount();
+  return record;
+}
+
+function updateRecordCount() {
+  const records = getRecords();
+  $('#recordCount').textContent = records.length;
+  $('#statTotal').textContent = records.length;
+  $('#statInterview').textContent = records.filter(r => r.type === 'interview').length;
+  $('#statRecruit').textContent = records.filter(r => r.type === 'recruit').length;
+  $('#recordsCountLabel').textContent = records.length + ' รายการ';
+}
+
+// ---- Form Submit ----
+$('#formInterview').addEventListener('submit', async (e) => {
+  e.preventDefault();
+  const data = serializeForm('formInterview');
+  if (!data.fullname) { showToast('กรุณากรอกชื่อ-นามสกุล', 'error'); return; }
+  
+  const record = saveRecord(data, 'interview');
+  const config = getConfig();
+  
+  if (config.gasUrl && navigator.onLine) {
+    const synced = await syncRecord(record, config.gasUrl);
+    showToast(synced ? 'บันทึกและ Sync เข้า Sheet แล้ว' : 'บันทึกในเครื่อง (Sync ล้มเหลว)');
+  } else {
+    showToast(navigator.onLine ? 'บันทึกในเครื่องแล้ว' : 'บันทึก Offline (จะ Sync เมื่อออนไลน์)');
+  }
+  
+  document.getElementById('formInterview').reset();
+  document.querySelectorAll('[id$="OtherBox"], [id$="SomeBox"], [id$="ConsultBox"], [id="q7OtherBox"], [id="maritalOtherBox"]').forEach(b => {
+    if (b) b.style.display = 'none';
+  });
+  updateAnsweredIndicator();
+  window.scrollTo(0, 0);
+});
+
+$('#formRecruit').addEventListener('submit', async (e) => {
+  e.preventDefault();
+  const data = serializeForm('formRecruit');
+  if (!data.fullname) { showToast('กรุณากรอกชื่อ-นามสกุล', 'error'); return; }
+  
+  const record = saveRecord(data, 'recruit');
+  const config = getConfig();
+  
+  if (config.gasUrl && navigator.onLine) {
+    const synced = await syncRecord(record, config.gasUrl);
+    showToast(synced ? 'บันทึกและ Sync เข้า Sheet แล้ว' : 'บันทึกในเครื่อง');
+  } else {
+    showToast('บันทึกในเครื่องแล้ว');
+  }
+  
+  document.getElementById('formRecruit').reset();
+  document.querySelectorAll('#r3OtherBox, #r4OtherBox, #maritalOtherBoxR').forEach(b => {
+    if (b) b.style.display = 'none';
+  });
+  updateAnsweredIndicator();
+  window.scrollTo(0, 0);
+});
+
+// ---- Render Records ----
+function renderRecords() {
+  const records = getRecords();
+  const list = $('#recordsList');
+  
+  if (!records.length) {
+    list.innerHTML = `
+      <div class="empty-state">
+        <div class="icon">📭</div>
+        <h3>ยังไม่มีบันทึก</h3>
+        <p>เริ่มสัมภาษณ์ลูกค้าจากแท็บด้านบน</p>
+      </div>`;
+    return;
+  }
+  
+  list.innerHTML = records.map(r => {
+    const d = r.data;
+    const typeLabel = r.type === 'interview' ? 'สัมภาษณ์' : 'Recruit';
+    return `
+      <div class="record-card ${r.type}">
+        <div class="record-meta">
+          <span class="record-type ${r.type}">${typeLabel}</span>
+          <span>${formatDateTime(r.createdAt)}</span>
+        </div>
+        <div class="record-name">${d.fullname || '(ไม่ระบุชื่อ)'}${d.nickname ? ' (' + d.nickname + ')' : ''}</div>
+        <div class="record-details">
+          ${d.phone ? '📞 ' + d.phone + ' · ' : ''}
+          ${d.occupation || ''}
+        </div>
+        <span class="record-sync-badge ${r.synced ? 'synced' : 'pending'}">
+          ${r.synced ? '☁️ Synced' : '⏳ รอ Sync'}
+        </span>
+        <div class="record-actions">
+          <button onclick="viewRecord('${r.id}')">👁️ ดู</button>
+          <button onclick="syncOne('${r.id}')">☁️ Sync</button>
+          <button class="delete" onclick="deleteRecord('${r.id}')">🗑️ ลบ</button>
+        </div>
+      </div>
+    `;
+  }).join('');
+}
+
+function viewRecord(id) {
+  const r = getRecords().find(x => x.id === id);
+  if (!r) return;
+  const summary = buildSummary(r.data, r.type);
+  $('#previewContent').textContent = summary;
+  $('#previewModal').classList.add('show');
+}
+
+function deleteRecord(id) {
+  if (!confirm('ลบบันทึกนี้?')) return;
+  const records = getRecords().filter(r => r.id !== id);
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(records));
+  renderRecords();
+  updateRecordCount();
+  showToast('ลบแล้ว');
+}
+
+async function syncOne(id) {
+  const config = getConfig();
+  if (!config.gasUrl) { showToast('ยังไม่ได้ตั้งค่า Google Apps Script URL', 'error'); return; }
+  const records = getRecords();
+  const r = records.find(x => x.id === id);
+  if (!r) return;
+  const ok = await syncRecord(r, config.gasUrl);
+  showToast(ok ? 'Sync เรียบร้อย' : 'Sync ล้มเหลว', ok ? 'success' : 'error');
+  renderRecords();
+}
+
+async function syncAllPending() {
+  const config = getConfig();
+  if (!config.gasUrl) { showToast('ยังไม่ได้ตั้งค่า Google Apps Script URL', 'error'); return; }
+  const records = getRecords().filter(r => !r.synced);
+  if (!records.length) { showToast('ทุกรายการ Sync แล้ว'); return; }
+  
+  showToast(`กำลัง Sync ${records.length} รายการ...`);
+  let success = 0;
+  for (const r of records) {
+    const ok = await syncRecord(r, config.gasUrl);
+    if (ok) success++;
+  }
+  showToast(`Sync สำเร็จ ${success}/${records.length}`, success === records.length ? 'success' : 'error');
+  renderRecords();
+}
+
+async function syncRecord(record, gasUrl) {
+  try {
+    const response = await fetch(gasUrl, {
+      method: 'POST',
+      headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+      body: JSON.stringify({
+        type: record.type,
+        data: record.data,
+        timestamp: record.createdAt
+      }),
+      redirect: 'follow'
+    });
+    
+    // อ่าน response จริง
+    const text = await response.text();
+    let result;
+    try {
+      result = JSON.parse(text);
+    } catch {
+      // ถ้า parse ไม่ได้ = ไม่ใช่ response ที่คาด
+      console.error('Invalid response:', text);
+      return false;
+    }
+    
+    if (result && result.ok) {
+      // Mark as synced
+      const records = getRecords();
+      const idx = records.findIndex(r => r.id === record.id);
+      if (idx >= 0) {
+        records[idx].synced = true;
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(records));
+      }
+      return true;
+    }
+    console.error('Sync failed:', result);
+    return false;
+  } catch (err) {
+    console.error('Sync error:', err);
+    return false;
+  }
+}
+
+// ---- Config ----
+function getConfig() {
+  try {
+    return JSON.parse(localStorage.getItem(CONFIG_KEY) || '{}');
+  } catch { return {}; }
+}
+
+function saveConfig() {
+  const url = $('#gasUrl').value.trim();
+  const config = { gasUrl: url };
+  localStorage.setItem(CONFIG_KEY, JSON.stringify(config));
+  showToast('บันทึกตั้งค่าแล้ว');
+}
+
+function loadConfig() {
+  const config = getConfig();
+  if (config.gasUrl) $('#gasUrl').value = config.gasUrl;
+}
+
+async function testConnection() {
+  const url = $('#gasUrl').value.trim();
+  if (!url) { showToast('กรุณาใส่ URL ก่อน', 'error'); return; }
+  if (!url.endsWith('/exec')) { showToast('URL ต้องลงท้ายด้วย /exec', 'error'); return; }
+  
+  showToast('กำลังทดสอบ...');
+  
+  try {
+    const response = await fetch(url, {
+      method: 'POST',
+      headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+      body: JSON.stringify({ type: 'test', data: { test: true }, timestamp: new Date().toISOString() }),
+      redirect: 'follow'
+    });
+    
+    const text = await response.text();
+    let result;
+    try {
+      result = JSON.parse(text);
+    } catch {
+      showToast('Response ผิดรูปแบบ — ตรวจสอบ Script Code', 'error');
+      console.error('Response:', text);
+      return;
+    }
+    
+    if (result && result.ok) {
+      showToast('✅ เชื่อมต่อสำเร็จ! พร้อมใช้งาน', 'success');
+    } else {
+      showToast('เชื่อมต่อได้ แต่ script ส่ง error: ' + (result.error || 'unknown'), 'error');
+    }
+  } catch (err) {
+    console.error('Test error:', err);
+    showToast('เชื่อมต่อไม่ได้: ' + err.message, 'error');
+  }
+}
+
+// ---- Export / Import ----
+function exportAllCSV() {
+  const records = getRecords();
+  if (!records.length) { showToast('ไม่มีข้อมูล', 'error'); return; }
+  
+  // Build CSV with headers
+  const rows = [];
+  const headers = [
+    'ID', 'ประเภท', 'วันที่บันทึก', 'ชื่อ-นามสกุล', 'ชื่อเล่น', 'วันเกิด', 'อาชีพ', 'เบอร์โทร', 'LINE ID',
+    'ที่อยู่', 'สถานะ', 'บุตรหญิง', 'บุตรชาย', 'หมายเหตุ',
+    // Interview
+    'Q1_ลูกค้าของ', 'Q2_ความสัมพันธ์', 'Q3_เหตุผล', 'Q4_ระยะเวลา', 'Q5_ครอบครัว',
+    'Q6_ความพอใจ', 'Q7_ต้องการ', 'Q8_ทบทวน', 'Q9_เคยวางแผน', 'Q10_แผนที่สนใจ',
+    'Q11_ออม', 'Q12_ตัดสินใจ',
+    // Recruit
+    'R1_งาน', 'R2_เปลี่ยนงาน', 'R2_เหตุผล', 'R3_เปิดโอกาส', 'R4_สนใจ', 'นัดวันที่', 'นัดเวลา',
+    'Synced'
+  ];
+  rows.push(headers.join(','));
+  
+  records.forEach(r => {
+    const d = r.data;
+    const row = [
+      r.id,
+      r.type === 'interview' ? 'สัมภาษณ์' : 'Recruit',
+      formatDateTime(r.createdAt),
+      d.fullname || '', d.nickname || '', d.birthdate || '', d.occupation || '',
+      d.phone || '', d.lineid || '', d.address || '',
+      d.marital ? LABELS.marital[d.marital] + (d.marital_other ? ' (' + d.marital_other + ')' : '') : '',
+      d.daughters || '', d.sons || '', d.notes || '',
+      // Interview
+      d.q1 ? LABELS.q1[d.q1] + (d.q1_other ? ' (' + d.q1_other + ')' : '') : '',
+      d.q2 ? LABELS.q2[d.q2] + (d.q2_other ? ' (' + d.q2_other + ')' : '') : '',
+      d.q3 ? d.q3.map(v => LABELS.q3[v]).join('; ') + (d.q3_other ? ' (' + d.q3_other + ')' : '') : '',
+      d.q4 ? LABELS.q4[d.q4] + (d.q4_other ? ' (' + d.q4_other + ')' : '') : '',
+      d.q5 ? LABELS.q5[d.q5] + (d.q5_reason ? ' (' + d.q5_reason + ')' : '') : '',
+      d.q6 ? LABELS.q6[d.q6] + (d.q6_other ? ' (' + d.q6_other + ')' : '') : '',
+      d.q7 ? d.q7.map(v => LABELS.q7[v]).join('; ') + (d.q7_other ? ' (' + d.q7_other + ')' : '') : '',
+      d.q8 ? LABELS.q8[d.q8] + (d.q8_other ? ' (' + d.q8_other + ')' : '') : '',
+      d.q9 ? LABELS.q9[d.q9] + (d.q9_other ? ' (' + d.q9_other + ')' : '') : '',
+      d.q10 ? d.q10.map(v => LABELS.q10[v]).join('; ') + (d.q10_other ? ' (' + d.q10_other + ')' : '') : '',
+      d.q11 ? LABELS.q11[d.q11] + (d.q11_other ? ' (' + d.q11_other + ')' : '') : '',
+      d.q12 ? LABELS.q12[d.q12] + (d.q12_consult ? ' (' + d.q12_consult + ')' : '') : '',
+      // Recruit
+      d.r1 || '',
+      d.r2 ? LABELS.r2[d.r2] : '',
+      d.r2_reason || '',
+      d.r3 ? LABELS.r3[d.r3] + (d.r3_other ? ' (' + d.r3_other + ')' : '') : '',
+      d.r4 ? LABELS.r4[d.r4] + (d.r4_other ? ' (' + d.r4_other + ')' : '') : '',
+      d.appt_date || '', d.appt_time || '',
+      r.synced ? 'Yes' : 'No'
+    ].map(v => {
+      const s = String(v || '').replace(/"/g, '""');
+      return /[",\n]/.test(s) ? '"' + s + '"' : s;
+    });
+    rows.push(row.join(','));
+  });
+  
+  const csv = '\ufeff' + rows.join('\n'); // BOM for Thai
+  downloadFile(csv, `wirapong_records_${new Date().toISOString().split('T')[0]}.csv`, 'text/csv');
+  showToast('Export CSV แล้ว');
+}
+
+function exportAllJSON() {
+  const records = getRecords();
+  if (!records.length) { showToast('ไม่มีข้อมูล', 'error'); return; }
+  const json = JSON.stringify(records, null, 2);
+  downloadFile(json, `wirapong_backup_${new Date().toISOString().split('T')[0]}.json`, 'application/json');
+  showToast('Export JSON แล้ว');
+}
+
+function downloadFile(content, filename, mime) {
+  const blob = new Blob([content], { type: mime });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = filename;
+  a.click();
+  URL.revokeObjectURL(url);
+}
+
+function importJSON() {
+  $('#importFile').click();
+}
+
+$('#importFile').addEventListener('change', (e) => {
+  const file = e.target.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = (evt) => {
+    try {
+      const imported = JSON.parse(evt.target.result);
+      if (!Array.isArray(imported)) throw new Error('Invalid format');
+      if (!confirm(`Import ${imported.length} รายการ? (จะเพิ่มเข้าข้อมูลเดิม)`)) return;
+      const existing = getRecords();
+      const combined = [...imported, ...existing];
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(combined));
+      updateRecordCount();
+      renderRecords();
+      showToast('Import แล้ว ' + imported.length + ' รายการ');
+    } catch (err) {
+      showToast('ไฟล์ไม่ถูกต้อง', 'error');
+    }
+  };
+  reader.readAsText(file);
+});
+
+function clearAllData() {
+  if (!confirm('⚠️ ล้างข้อมูลทั้งหมด? ไม่สามารถกู้คืนได้')) return;
+  if (!confirm('แน่ใจจริงๆ? ข้อมูลทั้งหมดจะหาย')) return;
+  localStorage.removeItem(STORAGE_KEY);
+  updateRecordCount();
+  renderRecords();
+  showToast('ล้างข้อมูลแล้ว');
+}
+
+// ---- Online/Offline detection ----
+function updateOnlineStatus() {
+  const status = $('#connectionStatus');
+  const text = $('#connectionText');
+  if (navigator.onLine) {
+    status.classList.remove('offline');
+    text.textContent = 'ออนไลน์';
+  } else {
+    status.classList.add('offline');
+    text.textContent = 'ออฟไลน์';
+  }
+}
+
+window.addEventListener('online', () => {
+  updateOnlineStatus();
+  showToast('กลับมาออนไลน์แล้ว');
+  const config = getConfig();
+  if (config.gasUrl) {
+    const pending = getRecords().filter(r => !r.synced);
+    if (pending.length) {
+      setTimeout(() => syncAllPending(), 1500);
+    }
+  }
+});
+window.addEventListener('offline', () => {
+  updateOnlineStatus();
+  showToast('ออฟไลน์ — ข้อมูลจะเก็บในเครื่อง');
+});
+
+// ---- Init ----
+updateOnlineStatus();
+loadConfig();
+updateRecordCount();
+</script>
+
+</body>
+</html>
